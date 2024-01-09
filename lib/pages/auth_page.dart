@@ -1,6 +1,7 @@
+import 'package:covoiturage/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:covoiturage/pages/home_page.dart';
+import 'package:covoiturage/pages/home_pageTest.dart';
 import 'package:covoiturage/pages/login_or_register.dart';
 
 class AuthPage extends StatelessWidget {
@@ -12,16 +13,13 @@ class AuthPage extends StatelessWidget {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // User is Logged in
-          if (snapshot.hasData){
-            return HomePage();
+          if (snapshot.hasData) {
+            return const HomePage();
           }
-
-          // User is NOT Logged in
           else {
-            return LoginOrRegisterPage();
+            return const LoginOrRegisterPage();
           }
-        } ,
+        },
       ),
     );
   }

@@ -4,7 +4,6 @@ import 'package:flutter_dialog_helper/flutter_dialog_helper.dart';
 import 'package:covoiturage/components/my_button.dart';
 import 'package:covoiturage/components/my_textfield.dart';
 import 'package:covoiturage/components/square_tile.dart';
-import 'package:covoiturage/model/user_model.dart';
 import 'package:covoiturage/pages/toast_message.dart';
 // import 'package:covoiturage/service/auth_service.dart';
 
@@ -23,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
       TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _cinController = TextEditingController();
 
   // sign user up method
   void signUserUp() async {
@@ -42,15 +42,13 @@ class _RegisterPageState extends State<RegisterPage> {
           password: _passwordController.text,
         );
         String? uid = res.user?.uid;
-        final userModel = UserModel(
-          email: _emailController.text,
-          prenom: _lastNameController.text,
-          nom: _firstNameController.text,
-          dateNaissance: "1990-01-01",
-          uid: uid,
-        );
+        // final userModel = UserModel(
+        //   email: _emailController.text,
+        //   prenom: _lastNameController.text,
+        //   nom: _firstNameController.text,
+        //   cin: _cinController.text,
+        // );
         try {
-          // await AuthService.signup(userModel);
           ToastMsg.showToastMsg("Registed");
           Navigator.pop(context);
           // Get.offAllNamed('/HomePage');

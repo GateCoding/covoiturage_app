@@ -1,104 +1,169 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covoiturage/bloc/offer_cubit.dart';
+import 'package:covoiturage/components/card_event_this_month.dart';
+import 'package:covoiturage/components/colors.dart';
+import 'package:covoiturage/components/custom_app_bar.dart';
+import 'package:covoiturage/components/my_navigation_bar.dart';
+import 'package:covoiturage/model/offer_model.dart';
+import 'package:covoiturage/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:covoiturage/pages/addpage.dart';
-import 'package:covoiturage/pages/demandpage.dart';
-import 'package:covoiturage/pages/home.dart';
-import 'package:covoiturage/pages/mailbox.dart';
-import 'package:covoiturage/pages/profilepage.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
-  late PageController _pageController; 
-
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
-  }
-
-  int _currentIndex = 0;
-
-  // List of titles corresponding to each page
-  final List<String> pageTitles = ['Home', 'Mailbox', 'Add', 'Demand', 'Profile'];
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0); 
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose(); 
-    super.dispose();
-  }
+  final CollectionReference eventsCollection =
+      FirebaseFirestore.instance.collection('events');
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(pageTitles[_currentIndex]), 
-        actions: [
-          IconButton(onPressed: signUserOut, icon: Icon(Icons.logout)),
-        ],
+      appBar:
+          const PreferredSize(preferredSize: Size(0, 0), child: CustomAppBar()),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        child: MyNavigationBar(
+          onNavigate: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushNamed(context, NamedRoutes.homeScreen);
+                break;
+              case 1:
+                Navigator.pushNamed(context, NamedRoutes.addScreen);
+                break;
+              case 2:
+                // Handle navigation to the event screen
+                break;
+              case 3:
+                // Handle navigation to the profile screen
+                break;
+            }
+          },
+        ),
       ),
-      body: PageView(
-        controller: _pageController, 
-        children: [
-          Home(),
-          MailboxPage(),
-          AddOfferPage(),
-          // DemandPage(),
-          ProfilePage(),
-        ],
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeInOut); 
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.blue,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 24),
+          child: BlocProvider(
+            create: (_) => OfferCubit()..listenToOffers(),
+            child: Column(
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 24),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Event This Month",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                BlocBuilder<OfferCubit, OfferState>(
+                  builder: (context, state) {
+                    if (state is OfferError) {
+                      return Center(child: Text(state.message));
+                    } else if (state is OfferLoaded) {
+                      return _listOfferThisMonth(state.offers);
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            label: 'Mailbox',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline_rounded),
-            label: 'Add',
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            backgroundColor: Colors.blue,
-            label: 'Demand',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            backgroundColor: Colors.blue,
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }
+
+  _buildHeader() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Current Location",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(children: [
+                  Image.asset('assets/images/ic_location.png', width: 16),
+                  const SizedBox(width: 4),
+                  const Text(
+                    "Marrakech",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.greyTextColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ]),
+              ],
+            ),
+            Container(
+              width: 48,
+              height: 48,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2ZpbGUlMjBwaG90b3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+
+  _listOfferThisMonth(List<OfferModel> offers) => Container(
+        height: 300,
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: offers.length,
+          reverse: true,
+          itemBuilder: (context, index) => BlocBuilder<OfferCubit, OfferState>(
+            builder: (context, state) {
+              if (state is OfferError) {
+                return const Center(child: Text("Error"));
+              } else if (state is OfferLoaded) {
+                return GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                      arguments: offers[index].toJson(),
+                      context,
+                      NamedRoutes.detailScreen),
+                  child: CardOfferThisMonth(offerModel: offers[index]),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ),
+      );
 }
