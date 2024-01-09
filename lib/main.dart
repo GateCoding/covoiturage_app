@@ -1,12 +1,12 @@
 import 'package:covoiturage/components/theme.dart';
 import 'package:covoiturage/pages/add_offer.dart';
+import 'package:covoiturage/pages/auth_page.dart';
 import 'package:covoiturage/pages/detail_page.dart';
 import 'package:covoiturage/pages/home_page.dart';
 import 'package:covoiturage/pages/ticket_page.dart';
 import 'package:covoiturage/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:covoiturage/pages/auth_page.dart';
 import 'firebase_options.dart';
 
 void main() async {

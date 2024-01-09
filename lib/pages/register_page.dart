@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_helper/flutter_dialog_helper.dart';
@@ -46,8 +47,11 @@ class _RegisterPageState extends State<RegisterPage> {
         //   email: _emailController.text,
         //   prenom: _lastNameController.text,
         //   nom: _firstNameController.text,
-        //   cin: _cinController.text,
+        //   dateNaissance: "1990-01-01",
+        //   uid: uid,
         // );
+        // Save user data to Firestore
+        // await addUserToFirestore(userModel);
         try {
           ToastMsg.showToastMsg("Registed");
           Navigator.pop(context);
@@ -94,6 +98,17 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
+
+  // Future<void> addUserToFirestore(UserModel userModel) async {
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(userModel.uid)
+  //         .set(userModel.toJson());
+  //   } catch (e) {
+  //     print('Error adding user to Firestore: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
