@@ -41,7 +41,11 @@ dependencies:
   get: ^4.6.1
   flutter_form_builder: ^9.1.1
   cupertino_icons: ^1.0.2
+  firebase_storage: ^11.5.2
   cloud_firestore: ^4.14.0
+  image_picker: ^1.0.6
+  random_string: ^2.3.1
+  flutter_bloc: ^8.1.1
 
 dev_dependencies:
   flutter_test:

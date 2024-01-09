@@ -1,14 +1,12 @@
 class OfferModel {
-  int? id;
+  String? id;
   int? idCreateur;
   String? titre;
   DateTime? dateCreation;
-  DateTime? dateDebut;
-  DateTime? dateFin;
   String? description;
-  String? adresse;
+  String? from;
+  String? to;
   int? montant;
-  bool? status;
   String? photo;
 
   OfferModel(
@@ -16,44 +14,36 @@ class OfferModel {
       this.idCreateur,
       this.titre,
       this.dateCreation,
-      this.dateDebut,
-      this.dateFin,
       this.description,
-      this.adresse,
+      this.from,
+      this.to,
       this.montant,
-      this.status,
       this.photo});
 
   OfferModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    idCreateur = json['id_createur'];
+    idCreateur = json['idCreateur'];
     titre = json['titre'];
     dateCreation = json['dateCreation'];
-    dateDebut = json['dateDebut'];
-    dateFin = json['dateFin'];
     description = json['description'];
-    adresse = json['adresse'];
+    from = json['from'];
+    to = json['to'];
     montant = json['montant'];
-    status = json['status'];
     photo = json['photo'];
   }
 
   Map<String, dynamic> toJson() {
-  final Map<String, dynamic> data = <String, dynamic>{};
-  data['id'] = id;
-  data['id_createur'] = idCreateur;
-  data['titre'] = titre;
-  data['dateCreation'] = dateCreation?.toIso8601String(); // Convert DateTime to string
-  data['dateDebut'] = dateDebut?.toIso8601String(); // Convert DateTime to string
-  data['dateFin'] = dateFin?.toIso8601String(); // Convert DateTime to string
-  data['description'] = description;
-  data['adresse'] = adresse;
-  data['montant'] = montant;
-  data['status'] = status;
-  data['photo'] = photo;
-  return data;
-}
-
-
-  
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['idCreateur'] = idCreateur;
+    data['titre'] = titre;
+    data['dateCreation'] =
+        dateCreation?.toIso8601String(); // Convert DateTime to string
+    data['description'] = description;
+    data['from'] = from;
+    data['to'] = to;
+    data['montant'] = montant;
+    data['photo'] = photo;
+    return data;
+  }
 }
