@@ -44,37 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBOG2ug4eu350FHhtJsbTH8_7vld_dGeO0',
-    appId: '1:411384642220:web:0eb4e3b202bf330b3b7d09',
-    messagingSenderId: '411384642220',
-    projectId: 'authapp-60368',
-    authDomain: 'authapp-60368.firebaseapp.com',
-    storageBucket: 'authapp-60368.appspot.com',
+    apiKey: 'AIzaSyCCOOeH6URnPc7_fxhR3WZD3_lRpUu727s',
+    appId: '1:183792762346:web:de8fe6e620ec67813bc693',
+    messagingSenderId: '183792762346',
+    projectId: 'covoiturage-1dc44',
+    authDomain: 'covoiturage-1dc44.firebaseapp.com',
+    storageBucket: 'covoiturage-1dc44.appspot.com',
+    measurementId: 'G-1TJBMSJ0ED',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAcK014C3Ws2DQINAQFwR7B63TXiObUdpQ',
-    appId: '1:411384642220:android:aebc2cf711cd9f343b7d09',
-    messagingSenderId: '411384642220',
-    projectId: 'authapp-60368',
-    storageBucket: 'authapp-60368.appspot.com',
+    apiKey: 'AIzaSyDmbWnwA-VElYf8H-q8lDDhGKGbFKTHRUE',
+    appId: '1:183792762346:android:2e39d6974f05d97b3bc693',
+    messagingSenderId: '183792762346',
+    projectId: 'covoiturage-1dc44',
+    storageBucket: 'covoiturage-1dc44.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCznrhrS4OpoVEbSvA1jIXgr6Ccs5ANuFM',
-    appId: '1:411384642220:ios:829c19c8e673fb3b3b7d09',
-    messagingSenderId: '411384642220',
-    projectId: 'authapp-60368',
-    storageBucket: 'authapp-60368.appspot.com',
-    iosBundleId: 'com.example.modernlogintute',
+    apiKey: 'AIzaSyClMIrfJXxQrC08i-qP0YNlODhOufCBe4s',
+    appId: '1:183792762346:ios:bd58f45879814da73bc693',
+    messagingSenderId: '183792762346',
+    projectId: 'covoiturage-1dc44',
+    storageBucket: 'covoiturage-1dc44.appspot.com',
+    iosBundleId: 'com.example.covoiturage',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCznrhrS4OpoVEbSvA1jIXgr6Ccs5ANuFM',
-    appId: '1:411384642220:ios:829c19c8e673fb3b3b7d09',
-    messagingSenderId: '411384642220',
-    projectId: 'authapp-60368',
-    storageBucket: 'authapp-60368.appspot.com',
-    iosBundleId: 'com.example.modernlogintute',
+    apiKey: 'AIzaSyClMIrfJXxQrC08i-qP0YNlODhOufCBe4s',
+    appId: '1:183792762346:ios:dcd55939caf7f2423bc693',
+    messagingSenderId: '183792762346',
+    projectId: 'covoiturage-1dc44',
+    storageBucket: 'covoiturage-1dc44.appspot.com',
+    iosBundleId: 'com.example.covoiturage.RunnerTests',
   );
 }
