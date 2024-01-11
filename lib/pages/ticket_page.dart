@@ -88,7 +88,7 @@ class TicketPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 _textDescription(
-                                    "Date", "${offerModel.dateCreation} 2022"),
+                                    "Date", "${offerModel.dateStart} 2022"),
                                 _textDescription("Seat", "UNOJI B12"),
                               ],
                             ),

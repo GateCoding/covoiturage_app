@@ -26,7 +26,6 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    log("ffff");
     final Map<String, dynamic> data = <String, dynamic>{};
     data['username'] = username;
     data['numberPhone'] = numberPhone;

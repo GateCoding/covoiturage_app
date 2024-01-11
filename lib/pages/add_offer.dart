@@ -1,12 +1,14 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class AddOfferPage extends StatefulWidget {
@@ -25,6 +27,7 @@ class _AddOfferPageState extends State<AddOfferPage> {
   final TextEditingController toController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController montantController = TextEditingController();
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -90,14 +93,29 @@ class _AddOfferPageState extends State<AddOfferPage> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16.0),
+
+                ElevatedButton(
+                  onPressed: _pickImage,
+                  child: const Text('Pick Image'),
+                ),
+
+                // Display selected image
+                if (_image != null)
+                  Image.file(
+                    _image!,
+                    height: 100,
+                  ),
+
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     _submitForm(
                         titleController.text,
                         fromController.text,
                         toController.text,
+                        montantController.text,
                         descriptionController.text,
-                        montantController.text);
+                        _image);
                   },
                   child: const Text('Add offer'),
                 ),
@@ -111,6 +129,17 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   Widget _buildAppBar(BuildContext context) => Row(
@@ -134,32 +163,61 @@ class _AddOfferPageState extends State<AddOfferPage> {
     String to,
     String montant,
     String description,
+    File? image,
   ) async {
     try {
-      late String userId; // Declare userId as late
+      String? userId;
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('yyyy/MM/dd HH:mm:ss').format(now);
 
       User? user = auth.currentUser;
       if (user != null) {
         userId = user.uid;
       }
 
-      DocumentReference documentReference =
-          await FirebaseFirestore.instance.collection('offers').add({
+      String photoUrl = await _uploadImage(image);
+
+      await FirebaseFirestore.instance.collection('offers').add({
         'title': titre,
         'idCreateur': userId,
         'from': from,
         'to': to,
         'montant': montant,
-        'photo':
-            "https://img.freepik.com/free-photo/closeup-chinese-paper-lantern-with-lights-surrounded-by-buildings_181624-13712.jpg?w=996&t=st=1662381267~exp=1662381867~hmac=fdf7b5d904279e2cb8d3a43ae0f2ddd0ad623addc5408a8578eb0ae2fb8c9187",
-        'date': DateTime.now(),
+        'photo': photoUrl,
+        'date': formattedDate,
         'description': description
       });
 
-      print('Offer added to Firebase');
+      print('Offer added successfully');
       // You can navigate to another screen or perform additional actions here
     } catch (error) {
       print('Failed to add offer to Firebase: $error');
+    }
+  }
+
+  Future<String> _uploadImage(File? image) async {
+    if (image == null) {
+      return Future.error("Image is null");
+    }
+
+    try {
+      // Create a unique filename for the image based on the current timestamp
+      String fileName = "image_${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+      // Reference to the Firebase Storage bucket
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child("images/$fileName");
+
+      // Upload the file to Firebase Storage
+      await storageReference.putFile(image);
+
+      // Get the download URL of the uploaded file
+      String downloadURL = await storageReference.getDownloadURL();
+
+      return downloadURL;
+    } catch (error) {
+      print("Error uploading image: $error");
+      return Future.error("Failed to upload image");
     }
   }
 }

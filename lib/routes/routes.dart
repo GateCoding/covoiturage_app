@@ -2,5 +2,5 @@ class NamedRoutes {
   static const homeScreen = '/home-screen';
   static const detailScreen = '/detail-screen';
   static const ticketScreen = '/ticket-screen';
-  static const addScreen = '/event-form';
+  static const addScreen = '/offer-form';
 }

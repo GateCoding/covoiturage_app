@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covoiturage/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_helper/flutter_dialog_helper.dart';
@@ -42,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        String? uid = res.user?.uid;
+        // String? uid = res.user?.uid;
         // final userModel = UserModel(
         //   email: _emailController.text,
         //   prenom: _lastNameController.text,
@@ -99,16 +100,16 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // Future<void> addUserToFirestore(UserModel userModel) async {
-  //   try {
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(userModel.uid)
-  //         .set(userModel.toJson());
-  //   } catch (e) {
-  //     print('Error adding user to Firestore: $e');
-  //   }
-  // }
+  Future<void> addUserToFirestore(UserModel userModel) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userModel.uid)
+          .set(userModel.toJson());
+    } catch (e) {
+      print('Error adding user to Firestore: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

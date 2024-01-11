@@ -13,9 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
   // sign user in method
@@ -29,16 +27,14 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-    // try sign in
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      // POP the circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      // POP the circle
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
         wrongEmailMessage();
@@ -94,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 50),
 
-                // welcome back, you've been missed!
                 Text(
                   'Welcome back you\'ve been missed!',
                   style: TextStyle(
