@@ -6,10 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_helper/flutter_dialog_helper.dart';
-import 'package:covoiturage/components/my_button.dart';
-import 'package:covoiturage/components/my_textfield.dart';
-import 'package:covoiturage/components/square_tile.dart';
-import 'package:covoiturage/pages/toast_message.dart';
+import 'package:covoiturage/utils/toast_message.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -28,11 +25,8 @@ class _RegisterPageState extends State<RegisterPage> {
       TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _numberPhoneController = TextEditingController();
-  final TextEditingController _imagePath = TextEditingController();
-  final TextEditingController _cinController = TextEditingController();
   FocusNode focusNode = FocusNode();
-
-  String? imageFile;
+  File? _image;
 
   void signUserUp() async {
     showDialog(
@@ -50,30 +44,19 @@ class _RegisterPageState extends State<RegisterPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+
         String? uid = res.user?.uid;
+        String photoUrl = await _uploadImage(_image);
         final userModel = UserModel(
           email: _emailController.text,
           numberPhone: _numberPhoneController.text,
           username: _firstNameController.text,
           dateNaissance: "1990-01-01",
-          imagePath: imageFile,
+          imagePath: photoUrl,
           uid: uid,
         );
 
-        if (imageFile != null) {
-          Reference storageReference =
-              FirebaseStorage.instance.ref().child('images/');
-          await storageReference.putFile(imageFile! as File);
-
-          // Get the image URL
-          String imageURL = await storageReference.getDownloadURL();
-
-          // Update the Firestore document with the image URL
-          //await documentReference.update({'imageURL': imageURL});
-        }
-
-        print('Event added to Firebase');
-        // You can navigate to another screen or perform additional actions here
+        ToastMsg.showToastMsg('Event added successfully');
 
         await addUserToFirestore(userModel);
 
@@ -122,26 +105,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> _pickImage() async {
-    //controller:_imagePath;
-    try {
-      final ImagePicker imagePicker = ImagePicker();
-
-      final XFile? image =
-          await imagePicker.pickImage(source: ImageSource.gallery);
-      print("${imagePicker}ddddddddddd");
-
-      if (image != null) {
-        setState(() {
-          imageFile = File(image.path) as String?;
-          print("${imageFile}ddddddddddd22222222222");
-        });
-      }
-    } catch (e) {
-      print("Error selecting image: $e");
-    }
-  }
-
   Future<void> addUserToFirestore(UserModel userModel) async {
     try {
       await FirebaseFirestore.instance
@@ -149,16 +112,12 @@ class _RegisterPageState extends State<RegisterPage> {
           .doc(userModel.uid)
           .set(userModel.toJson());
     } catch (e) {
-      print('Error adding user to Firestore: $e');
+      ToastMsg.showToastMsg('Error adding user to Firestore: $e');
     }
   }
 
-  void UploadImageft() {}
- 
-
- // ... (Previous code remains unchanged)
-@override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -168,31 +127,16 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: _pickImage,
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey[300],
-              ),
-              child: const Icon(Icons.add_a_photo),
-            ),
-          ),
-        ],
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(30.0),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -204,10 +148,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.grey[300],
-                            child: imageFile != null
+                            child: _image != null
                                 ? ClipOval(
                                     child: Image.file(
-                                      imageFile! as File,
+                                      _image!,
                                       height: 100,
                                       width: 100,
                                       fit: BoxFit.cover,
@@ -228,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: _firstNameController,
-                    decoration: InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Username',
                     hintText: 'Username',
                     border: OutlineInputBorder(
@@ -246,13 +190,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                  ),                  languageCode: "en",
-                  onChanged: (phone) {
-                    print(phone.completeNumber);
-                  },
-                  onCountryChanged: (country) {
-                    print('Country changed to: ${country.name}');
-                  },
+                  ),
+                  languageCode: "en",
                 ),
                 TextField(
                   controller: _emailController,
@@ -262,11 +201,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                  ),                ),
+                  ),
+                ),
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: _passwordController,
-                    decoration: InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: '',
                     border: OutlineInputBorder(
@@ -279,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
-                    labelText:  'Confirm Password',
+                    labelText: 'Confirm Password',
                     hintText: 'Confirm Password',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -294,7 +234,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: ElevatedButton(
                     onPressed: signUserUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color(0XFF08B783),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -303,7 +243,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 18.0),
+                        style:
+                            TextStyle(fontSize: 18.0, color: Color(0XFFFFFFFF)),
                       ),
                     ),
                   ),
@@ -315,4 +256,33 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
- }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String> _uploadImage(File? image) async {
+    if (image == null) {
+      return Future.error("Image is null");
+    }
+
+    try {
+      String fileName = "image_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child("images_user/$fileName");
+      await storageReference.putFile(image);
+      String downloadURL = await storageReference.getDownloadURL();
+      return downloadURL;
+    } catch (error) {
+      ToastMsg.showToastMsg("Error uploading image: $error");
+      return Future.error("Failed to upload image");
+    }
+  }
+}

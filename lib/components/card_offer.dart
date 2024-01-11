@@ -221,7 +221,7 @@ class _CardOfferState extends State<CardOffer> {
                             child: Container(
                               width: 38,
                               height: 38,
-                              decoration: BoxDecoration(
+                              decoration:  BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,

@@ -2,16 +2,12 @@ import 'dart:developer';
 
 import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
-import 'package:covoiturage/components/stack_participant.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/model/user_model.dart';
-import 'package:covoiturage/routes/routes.dart';
 import 'package:covoiturage/service/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
-
-import 'package:flutter/material.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -107,7 +103,7 @@ class _DetailPageState extends State<DetailPage> {
                       Text(
                         "${offerModel.montant}DH",
                         style: const TextStyle(
-                          color: Color.fromARGB(255, 58, 224, 42),
+                          color: Color(0XFF08B783),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -123,11 +119,6 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
               ElevatedButton(
-                // onPressed: () => Navigator.pushNamed(
-                //   context,
-                //   NamedRoutes.ticketScreen,
-                //   arguments: offerModel.toJson(),
-                // ),
                 onPressed: () async {
                   var req = BraintreeDropInRequest(
                     tokenizationKey: 'sandbox_g42y39zw_348pk9cgf3bgyw2b',
@@ -138,12 +129,11 @@ class _DetailPageState extends State<DetailPage> {
                     cardEnabled: true,
                   );
                   BraintreeDropInResult? res = await BraintreeDropIn.start(req);
-                  // _updateDetails();
                   log(res!.paymentMethodNonce.description);
                   log(res.paymentMethodNonce.nonce);
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 71, 223, 57),
+                    backgroundColor: const Color(0XFF08B783),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -200,7 +190,7 @@ class _DetailPageState extends State<DetailPage> {
                   Text(
                     offerModel.dateStart!,
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 58, 224, 42),
+                      color: Color(0XFF08B783),
                     ),
                   ),
                 ],
@@ -222,7 +212,7 @@ class _DetailPageState extends State<DetailPage> {
             onTap: () => Navigator.pop(context),
           ),
           const Text(
-            "Detail",
+            "Offer Detail",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           CircleButton(icon: 'assets/images/sign-out.png', onTap: signUserOut)
@@ -245,7 +235,15 @@ class _DetailPageState extends State<DetailPage> {
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.w600),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Trajet",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Image.asset(
@@ -253,15 +251,17 @@ class _DetailPageState extends State<DetailPage> {
                           width: 16,
                           height: 16,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 10),
                         Text(
-                          offerModel.from!,
-                          style: const TextStyle(color: Color(0xFF9698A9)),
+                          "From ${offerModel.from!}",
+                          style: const TextStyle(
+                              fontSize: 18, color: Color(0xFF9698A9)),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 10),
                         Text(
-                          offerModel.to!,
-                          style: const TextStyle(color: Color(0xFF9698A9)),
+                          " To ${offerModel.to!}",
+                          style: const TextStyle(
+                              fontSize: 18, color: Color(0xFF9698A9)),
                         )
                       ],
                     ),
@@ -272,13 +272,13 @@ class _DetailPageState extends State<DetailPage> {
                   height: 35,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFEECE9),
+                    color: const Color(0XFF08B783),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     "${offerModel.montant}DH",
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 58, 224, 42),
+                      color: Color(0XFFFFFFFF),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -286,12 +286,12 @@ class _DetailPageState extends State<DetailPage> {
               ],
             ),
             const SizedBox(height: 16),
-            const StackParticipant(
-              fontSize: 14,
-              width: 30,
-              height: 30,
-              positionText: 100,
-            ),
+            // const StackParticipant(
+            //   fontSize: 14,
+            //   width: 30,
+            //   height: 30,
+            //   positionText: 100,
+            // ),
             const SizedBox(height: 16),
             const Text(
               "Description",
@@ -310,14 +310,6 @@ class _DetailPageState extends State<DetailPage> {
                   fontSize: 12,
                   height: 1.75,
                 ),
-                children: [
-                  TextSpan(
-                    text: "${offerModel.description}",
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 58, 224, 42),
-                    ),
-                  )
-                ],
               ),
             ),
             const SizedBox(height: 64),
