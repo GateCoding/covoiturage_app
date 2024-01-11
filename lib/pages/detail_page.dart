@@ -5,6 +5,7 @@ import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key});
@@ -93,6 +94,23 @@ class DetailPage extends StatelessWidget {
                   NamedRoutes.ticketScreen,
                   arguments: offerModel.toJson(),
                 ),
+                //   onPressed: ()=>{
+                //   req = BraintreeDropInRequest(
+                //   tokenizationKey: 'sandbox_gpz3pxyq_dtn5b9gypbndfyc2',
+                //   collectDeviceData: true,
+                //   paypalRequest: BraintreePayPalRequest(
+                //     amount: offerModel.montant, displayName: _cre
+                //   ),
+                //   cardEnabled: true
+                // );
+                // BraintreeDropInResult res = await BraintreeDropIn.start(req);
+                // if (res != null) {
+                //   _updateDetails();
+                //   // log(res.paymentMethodNonce.description);
+                //   // log(res.paymentMethodNonce.nonce);
+
+                // }
+                //   },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 71, 223, 57),
                     elevation: 0,
@@ -149,7 +167,7 @@ class DetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    offerModel.dateCreation! as String,
+                    offerModel.dateStart!,
                     style: const TextStyle(
                       color: Color.fromARGB(255, 58, 224, 42),
                     ),
@@ -226,9 +244,9 @@ class DetailPage extends StatelessWidget {
                     color: const Color(0xFFFEECE9),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
-                    "\$100",
-                    style: TextStyle(
+                  child: Text(
+                    "${offerModel.montant} DH",
+                    style: const TextStyle(
                       color: Color.fromARGB(255, 58, 224, 42),
                       fontWeight: FontWeight.w500,
                     ),
