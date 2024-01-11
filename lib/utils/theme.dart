@@ -10,7 +10,7 @@ class Themes {
   );
 
   static final ThemeData lightTheme = ThemeData(
-    primaryColor: AppColors.primaryColor,
+    primaryColor: const Color(0XFF008955),
     brightness: Brightness.light,
     appBarTheme: AppBarTheme(toolbarTextStyle: lightText),
     textTheme: TextTheme(
