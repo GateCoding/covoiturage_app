@@ -3,6 +3,7 @@ import 'package:covoiturage/components/welcom_screen.dart';
 import 'package:covoiturage/pages/add_offer.dart';
 import 'package:covoiturage/pages/auth_page.dart';
 import 'package:covoiturage/pages/detail_page.dart';
+import 'package:covoiturage/pages/driver_profile.dart';
 import 'package:covoiturage/pages/home_page.dart';
 import 'package:covoiturage/pages/login_page.dart';
 import 'package:covoiturage/pages/register_page.dart';
@@ -58,6 +59,11 @@ class MyApp extends StatelessWidget {
           case NamedRoutes.createAccount:
             return MaterialPageRoute(
               builder: (context) => const RegisterPage(),
+              settings: settings,
+            );
+            case NamedRoutes.driverPage:
+            return MaterialPageRoute(
+              builder: (_) => const DriverProfilePage(),
               settings: settings,
             );
           default:
