@@ -1,19 +1,19 @@
 class OfferModel {
   String? id;
-  int? idCreateur;
+  String? idCreateur;
   String? titre;
-  DateTime? dateCreation;
+  String? dateStart;
   String? description;
   String? from;
   String? to;
-  int? montant;
+  String? montant;
   String? photo;
 
   OfferModel(
       {this.id,
       this.idCreateur,
       this.titre,
-      this.dateCreation,
+      this.dateStart,
       this.description,
       this.from,
       this.to,
@@ -23,8 +23,8 @@ class OfferModel {
   OfferModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     idCreateur = json['idCreateur'];
-    titre = json['titre'];
-    dateCreation = json['dateCreation'];
+    titre = json['title'];
+    dateStart = json['date'];
     description = json['description'];
     from = json['from'];
     to = json['to'];
@@ -36,9 +36,8 @@ class OfferModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['idCreateur'] = idCreateur;
-    data['titre'] = titre;
-    data['dateCreation'] =
-        dateCreation?.toIso8601String(); // Convert DateTime to string
+    data['title'] = titre;
+    data['date'] = dateStart;
     data['description'] = description;
     data['from'] = from;
     data['to'] = to;

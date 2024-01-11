@@ -9,10 +9,10 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome'),
+        title: const Text('Welcome'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -21,38 +21,38 @@ class WelcomePage extends StatelessWidget {
               'assets/images/welcomeimage.png',
               height: 150.0, // Set the height as needed
             ),
-            SizedBox(height: 16.0),
-            Text(
+            const SizedBox(height: 16.0),
+            const Text(
               'Welcome to the App!',
               style: TextStyle(fontSize: 24.0),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16.0),
-            Text(
+            const SizedBox(height: 16.0),
+            const Text(
               'Have a better sharing experience.',
               style: TextStyle(fontSize: 18.0),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32.0),
+            const SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
                 // Navigate to the Create Account page
                 Navigator.pushNamed(context, '/createAccount');
               },
               style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 2, 158, 98)),
-              child: Text('Create an account',
+                  backgroundColor: const Color.fromARGB(255, 2, 158, 98)),
+              child: const Text('Create an account',
                   style: TextStyle(color: Colors.white)),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 // Navigate to the Log In page
                 Navigator.pushNamed(context, '/logIn');
               },
               style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 222, 244, 223)),
-              child: Text('Log In',
+                  backgroundColor: const Color.fromARGB(255, 222, 244, 223)),
+              child: const Text('Log In',
                   style: TextStyle(color: Color.fromARGB(255, 2, 158, 98))),
             ),
           ],

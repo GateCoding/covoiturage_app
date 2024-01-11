@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/bloc/offer_cubit.dart';
-import 'package:covoiturage/components/card_event_this_month.dart';
+import 'package:covoiturage/components/card_offer.dart';
 import 'package:covoiturage/components/colors.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/my_navigation_bar.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/routes/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,20 +66,21 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Event This Month",
+                        "Offers This Month",
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 16),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+                // GestureDetector(child: const CardoffrelistItemWidget())
                 BlocBuilder<OfferCubit, OfferState>(
                   builder: (context, state) {
                     if (state is OfferError) {
                       return Center(child: Text(state.message));
                     } else if (state is OfferLoaded) {
-                      return _listOfferThisMonth(state.offers);
+                      return _listOffer(state.offers);
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -124,29 +124,24 @@ class _HomePageState extends State<HomePage> {
                 ]),
               ],
             ),
-            Container(
-              width: 48,
-              height: 48,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      "https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2ZpbGUlMjBwaG90b3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
-                ),
-              ),
-            )
+            ClipRRect(
+                borderRadius: BorderRadius.zero,
+                child: Container(
+                  decoration: const BoxDecoration(
+                      // border: border,
+                      // borderRadius: radius,
+                      ),
+                )),
           ],
         ),
       );
 
-  _listOfferThisMonth(List<OfferModel> offers) => Container(
-        height: 300,
+  _listOffer(List<OfferModel> offers) => Container(
+        height: 600,
         margin: const EdgeInsets.symmetric(horizontal: 24),
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
           itemCount: offers.length,
-          reverse: true,
           itemBuilder: (context, index) => BlocBuilder<OfferCubit, OfferState>(
             builder: (context, state) {
               if (state is OfferError) {
@@ -157,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                       arguments: offers[index].toJson(),
                       context,
                       NamedRoutes.detailScreen),
-                  child: CardOfferThisMonth(offerModel: offers[index]),
+                  child: CardOffer(offerModel: offers[index]),
                 );
               } else {
                 return const Center(child: CircularProgressIndicator());
