@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 class UserModel {
   int? id;
@@ -7,6 +8,7 @@ class UserModel {
   String? email;
   String? dateNaissance;
   String? uid;
+  File? imagePath;
 
   UserModel(
       {this.id,
@@ -14,6 +16,7 @@ class UserModel {
       this.numberPhone,
       this.email,
       this.dateNaissance,
+      this.imagePath,
       this.uid});
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +25,7 @@ class UserModel {
     numberPhone = json['numberPhone'];
     email = json['email'];
     dateNaissance = json['dateNaissance'];
+    imagePath = json['imagePath'];
     uid = json['uid'];
   }
 
@@ -32,6 +36,7 @@ class UserModel {
     data['numberPhone'] = numberPhone;
     data['email'] = email;
     data['dateNaissance'] = dateNaissance;
+    data['imagePath'] = imagePath;
     data['uid'] = uid;
     return data;
   }

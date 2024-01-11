@@ -3,4 +3,6 @@ class NamedRoutes {
   static const detailScreen = '/detail-screen';
   static const ticketScreen = '/ticket-screen';
   static const addScreen = '/event-form';
+  static const createAccount = '/createAccount';
+  static const logIn = '/login';
 }
