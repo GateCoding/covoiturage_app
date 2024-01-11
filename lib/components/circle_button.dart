@@ -13,10 +13,6 @@ class CircleButton extends StatelessWidget {
         width: 42,
         height: 42,
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFEECE9),
-          shape: BoxShape.circle,
-        ),
         child: Image.asset(icon, width: 18),
       ),
     );

@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 class UserModel {
   int? id;
   String? username;

@@ -1,8 +1,8 @@
 import 'package:covoiturage/pages/home_page.dart';
 import 'package:covoiturage/pages/login_page.dart';
+import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:covoiturage/pages/login_or_register.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -16,7 +16,7 @@ class AuthPage extends StatelessWidget {
           if (snapshot.hasData) {
             return const HomePage();
           } else {
-            return const LoginPage();
+            return const WelcomePage();
           }
         },
       ),

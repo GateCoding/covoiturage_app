@@ -4,7 +4,10 @@ import 'package:covoiturage/components/card_offer.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/my_navigation_bar.dart';
 import 'package:covoiturage/model/offer_model.dart';
+import 'package:covoiturage/model/user_model.dart';
 import 'package:covoiturage/routes/routes.dart';
+import 'package:covoiturage/service/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +20,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  UserModel? _user;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    getDataUser();
+  }
+
+  void getDataUser() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      UserService userService = UserService();
+      UserModel? userModel = await userService.getUserByUid(user.uid);
+
+      setState(() {
+        _user = userModel;
+      });
+    }
+  }
+
   final CollectionReference eventsCollection =
       FirebaseFirestore.instance.collection('events');
 
@@ -111,14 +135,17 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: 8),
               ],
             ),
-            ClipRRect(
-                borderRadius: BorderRadius.zero,
-                child: Container(
-                  decoration: const BoxDecoration(
-                      // border: border,
-                      // borderRadius: radius,
-                      ),
-                )),
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(_user!.imagePath ?? ''),
+                ),
+              ),
+            )
           ],
         ),
       );

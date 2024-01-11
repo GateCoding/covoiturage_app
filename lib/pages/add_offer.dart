@@ -5,6 +5,7 @@ import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/toast_message.dart';
 import 'package:covoiturage/model/offer_model.dart';
+import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +167,12 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const WelcomePage(),
+      ),
+    );
   }
 
   Future<void> _pickImage() async {
@@ -240,22 +247,14 @@ class _AddOfferPageState extends State<AddOfferPage> {
     }
 
     try {
-      // Create a unique filename for the image based on the current timestamp
       String fileName = "image_${DateTime.now().millisecondsSinceEpoch}.jpg";
-
-      // Reference to the Firebase Storage bucket
       Reference storageReference =
           FirebaseStorage.instance.ref().child("images/$fileName");
-
-      // Upload the file to Firebase Storage
       await storageReference.putFile(image);
-
-      // Get the download URL of the uploaded file
       String downloadURL = await storageReference.getDownloadURL();
-
       return downloadURL;
     } catch (error) {
-      print("Error uploading image: $error");
+      ToastMsg.showToastMsg("Error uploading image: $error");
       return Future.error("Failed to upload image");
     }
   }

@@ -1,12 +1,11 @@
 import 'package:covoiturage/utils/theme.dart';
-import 'package:covoiturage/components/welcom_screen.dart';
+import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:covoiturage/pages/add_offer.dart';
 import 'package:covoiturage/pages/auth_page.dart';
 import 'package:covoiturage/pages/detail_page.dart';
 import 'package:covoiturage/pages/home_page.dart';
 import 'package:covoiturage/pages/login_page.dart';
 import 'package:covoiturage/pages/register_page.dart';
-import 'package:covoiturage/pages/ticket_page.dart';
 import 'package:covoiturage/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: Themes.lightTheme,
-      home: const WelcomePage(), // Use AuthPage as the initial page
+      home: const AuthPage(), // Use AuthPage as the initial page
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case NamedRoutes.homeScreen:
@@ -39,12 +38,6 @@ class MyApp extends StatelessWidget {
               builder: (_) => const DetailPage(),
               settings: settings,
             );
-          case NamedRoutes.ticketScreen:
-            return MaterialPageRoute(
-              builder: (context) => const TicketPage(),
-              settings: settings,
-            );
-
           case NamedRoutes.addScreen:
             return MaterialPageRoute(
               builder: (context) => const AddOfferPage(),
