@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/bloc/offer_cubit.dart';
 import 'package:covoiturage/components/card_offer.dart';
-import 'package:covoiturage/components/colors.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/my_navigation_bar.dart';
 import 'package:covoiturage/model/offer_model.dart';
@@ -99,29 +98,17 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Current Location",
+                Text(
+                  "Covoiturage App",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(children: [
-                  Image.asset('assets/images/ic_location.png', width: 16),
-                  const SizedBox(width: 4),
-                  const Text(
-                    "Marrakech",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.greyTextColor,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ]),
+                SizedBox(height: 8),
               ],
             ),
             ClipRRect(

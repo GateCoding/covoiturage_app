@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
+import 'package:covoiturage/components/toast_message.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -27,6 +28,9 @@ class _AddOfferPageState extends State<AddOfferPage> {
   final TextEditingController toController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController montantController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController carController = TextEditingController();
+  final TextEditingController speedController = TextEditingController();
   File? _image;
 
   @override
@@ -49,24 +53,40 @@ class _AddOfferPageState extends State<AddOfferPage> {
                   decoration: const InputDecoration(labelText: 'Offer Title'),
                 ),
                 const SizedBox(height: 16.0),
-                // TextField(
-                //   controller: dateController,
-                //   decoration: const InputDecoration(labelText: 'Offer Date'),
-                //   onTap: () async {
-                //     DateTime? pickedDate = await showDatePicker(
-                //       context: context,
-                //       initialDate: DateTime.now(),
-                //       firstDate: DateTime.now(),
-                //       lastDate: DateTime(2101),
-                //     );
+                TextField(
+                  controller: dateController,
+                  decoration:
+                      const InputDecoration(labelText: 'Offer Date & Time'),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                    );
 
-                //     if (pickedDate != null) {
-                //       String formattedDate =
-                //           DateFormat('dd MMM').format(pickedDate);
-                //       dateController.text = formattedDate;
-                //     }
-                //   },
-                // ),
+                    if (pickedDate != null) {
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+
+                      if (pickedTime != null) {
+                        DateTime selectedDateTime = DateTime(
+                          pickedDate.year,
+                          pickedDate.month,
+                          pickedDate.day,
+                          pickedTime.hour,
+                          pickedTime.minute,
+                        );
+
+                        String formattedDateTime =
+                            DateFormat('MMM dd HH:mm').format(selectedDateTime);
+                        dateController.text = formattedDateTime;
+                      }
+                    }
+                  },
+                ),
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: fromController,
@@ -75,12 +95,26 @@ class _AddOfferPageState extends State<AddOfferPage> {
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: toController,
-                  decoration: const InputDecoration(labelText: 'From'),
+                  decoration: const InputDecoration(labelText: 'to'),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: carController,
+                  decoration: const InputDecoration(labelText: 'Car'),
                 ),
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: montantController,
                   decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: speedController,
+                  decoration: const InputDecoration(labelText: 'Max speed'),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
@@ -96,7 +130,7 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
                 ElevatedButton(
                   onPressed: _pickImage,
-                  child: const Text('Pick Image'),
+                  child: const Text('Car Image'),
                 ),
 
                 // Display selected image
@@ -115,6 +149,9 @@ class _AddOfferPageState extends State<AddOfferPage> {
                         toController.text,
                         montantController.text,
                         descriptionController.text,
+                        carController.text,
+                        speedController.text,
+                        dateController.text,
                         _image);
                   },
                   child: const Text('Add offer'),
@@ -158,18 +195,17 @@ class _AddOfferPageState extends State<AddOfferPage> {
       );
 
   void _submitForm(
-    String titre,
-    String from,
-    String to,
-    String montant,
-    String description,
-    File? image,
-  ) async {
+      String titre,
+      String from,
+      String to,
+      String montant,
+      String description,
+      String car,
+      String speed,
+      String date,
+      File? image) async {
     try {
       String? userId;
-      DateTime now = DateTime.now();
-      String formattedDate = DateFormat('yyyy/MM/dd HH:mm:ss').format(now);
-
       User? user = auth.currentUser;
       if (user != null) {
         userId = user.uid;
@@ -184,14 +220,17 @@ class _AddOfferPageState extends State<AddOfferPage> {
         'to': to,
         'montant': montant,
         'photo': photoUrl,
-        'date': formattedDate,
+        'date': date,
+        'carName': car,
+        'vitesseMax': speed,
         'description': description
       });
 
-      print('Offer added successfully');
+      ToastMsg.showToastMsg('Offer added successfully');
+      Navigator.pop(context);
       // You can navigate to another screen or perform additional actions here
     } catch (error) {
-      print('Failed to add offer to Firebase: $error');
+      ToastMsg.showToastMsg('Failed to add offer to Firebase: $error');
     }
   }
 
