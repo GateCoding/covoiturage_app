@@ -1,4 +1,4 @@
-import 'package:covoiturage/components/theme.dart';
+import 'package:covoiturage/utils/theme.dart';
 import 'package:covoiturage/components/welcom_screen.dart';
 import 'package:covoiturage/pages/add_offer.dart';
 import 'package:covoiturage/pages/auth_page.dart';

@@ -1,20 +1,54 @@
+import 'dart:developer';
+
 import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/stack_participant.dart';
 import 'package:covoiturage/model/offer_model.dart';
+import 'package:covoiturage/model/user_model.dart';
 import 'package:covoiturage/routes/routes.dart';
+import 'package:covoiturage/service/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 
-class DetailPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
+
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  OfferModel? offerModel;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  UserModel? userModel;
+
+  @override
+  void initState() {
+    super.initState();
+    getDataUser();
+  }
+
+  void getDataUser() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      UserService userService = UserService();
+      UserModel? userModel = await userService.getUserByUid(user.uid);
+
+      setState(() {
+        userModel = userModel;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> offerData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final OfferModel offerModel = OfferModel.fromJson(offerData);
+    offerModel = OfferModel.fromJson(offerData);
+
     return Scaffold(
       appBar:
           const PreferredSize(preferredSize: Size(0, 0), child: CustomAppBar()),
@@ -29,9 +63,9 @@ class DetailPage extends StatelessWidget {
                   children: [
                     _buildAppBar(context),
                     const SizedBox(height: 24),
-                    _buildCardImage(offerModel),
+                    _buildCardImage(offerModel!),
                     const SizedBox(height: 16),
-                    _buildDescription(offerModel),
+                    _buildDescription(offerModel!),
                   ],
                 ),
               ),
@@ -39,7 +73,7 @@ class DetailPage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: _buildBottomBar(context, offerModel),
+            child: _buildBottomBar(context, offerModel!),
           )
         ],
       ),
@@ -60,26 +94,26 @@ class DetailPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Total Price",
                     style: TextStyle(fontSize: 12, color: Color(0xFF9698A9)),
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Text(
-                        "\$100",
-                        style: TextStyle(
+                        "${offerModel.montant}DH",
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 58, 224, 42),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(width: 2),
-                      Text(
+                      const SizedBox(width: 2),
+                      const Text(
                         "/Person",
                         style:
                             TextStyle(fontSize: 12, color: Color(0xFF9698A9)),
@@ -89,28 +123,25 @@ class DetailPage extends StatelessWidget {
                 ],
               ),
               ElevatedButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  NamedRoutes.ticketScreen,
-                  arguments: offerModel.toJson(),
-                ),
-                //   onPressed: ()=>{
-                //   req = BraintreeDropInRequest(
-                //   tokenizationKey: 'sandbox_gpz3pxyq_dtn5b9gypbndfyc2',
-                //   collectDeviceData: true,
-                //   paypalRequest: BraintreePayPalRequest(
-                //     amount: offerModel.montant, displayName: _cre
-                //   ),
-                //   cardEnabled: true
-                // );
-                // BraintreeDropInResult res = await BraintreeDropIn.start(req);
-                // if (res != null) {
-                //   _updateDetails();
-                //   // log(res.paymentMethodNonce.description);
-                //   // log(res.paymentMethodNonce.nonce);
-
-                // }
-                //   },
+                // onPressed: () => Navigator.pushNamed(
+                //   context,
+                //   NamedRoutes.ticketScreen,
+                //   arguments: offerModel.toJson(),
+                // ),
+                onPressed: () async {
+                  var req = BraintreeDropInRequest(
+                    tokenizationKey: 'sandbox_g42y39zw_348pk9cgf3bgyw2b',
+                    collectDeviceData: true,
+                    paypalRequest: BraintreePayPalRequest(
+                        amount: offerModel.montant,
+                        displayName: userModel?.username),
+                    cardEnabled: true,
+                  );
+                  BraintreeDropInResult? res = await BraintreeDropIn.start(req);
+                  // _updateDetails();
+                  log(res!.paymentMethodNonce.description);
+                  log(res.paymentMethodNonce.nonce);
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 71, 223, 57),
                     elevation: 0,
@@ -120,7 +151,7 @@ class DetailPage extends StatelessWidget {
                         vertical: 10, horizontal: 20),
                     maximumSize: const Size(200, 150)),
                 child: const Text(
-                  "Get a Ticket",
+                  "Get this offer",
                   style: TextStyle(color: Color(0xFFffffff), fontSize: 16),
                 ),
               )
@@ -245,7 +276,7 @@ class DetailPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "${offerModel.montant} DH",
+                    "${offerModel.montant}DH",
                     style: const TextStyle(
                       color: Color.fromARGB(255, 58, 224, 42),
                       fontWeight: FontWeight.w500,
@@ -279,10 +310,10 @@ class DetailPage extends StatelessWidget {
                   fontSize: 12,
                   height: 1.75,
                 ),
-                children: const [
+                children: [
                   TextSpan(
-                    text: "Read More...",
-                    style: TextStyle(
+                    text: "${offerModel.description}",
+                    style: const TextStyle(
                       color: Color.fromARGB(255, 58, 224, 42),
                     ),
                   )

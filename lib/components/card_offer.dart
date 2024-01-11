@@ -2,6 +2,7 @@ import 'package:covoiturage/components/colors.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/model/user_model.dart';
 import 'package:covoiturage/service/user_service.dart';
+import 'package:covoiturage/utils/app_decoration.dart';
 import 'package:flutter/material.dart';
 
 class CardOffer extends StatefulWidget {
@@ -102,14 +103,28 @@ class _CardOfferState extends State<CardOffer> {
                             ),
                           ),
                           const Spacer(),
-                          Text(
-                            "${widget.offerModel.montant} DH",
-                            style: const TextStyle(
-                              color: Color(0XFF131313),
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w400,
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              // width: 61,
+                              margin: const EdgeInsets.only(right: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 1,
+                              ),
+                              decoration: AppDecoration.fillTeal.copyWith(
+                                borderRadius: BorderRadiusStyle.circleBorder10,
+                              ),
+                              child: Text(
+                                "${widget.offerModel.montant}DH",
+                                style: const TextStyle(
+                                  color: Color(0XFFFFFFFF),
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -126,33 +141,75 @@ class _CardOfferState extends State<CardOffer> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 27,
-                      width: 130,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 0),
-                            child: Image.asset(
-                              'assets/images/ic_location.png',
-                              width: 16,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 75),
-                            child: Text(
-                              "${widget.offerModel.to}",
-                              style: const TextStyle(
-                                color: Color(0XFF131313),
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w500,
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 27,
+                          width: 130,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 0),
+                                child: Image.asset(
+                                  'assets/images/ic_location.png',
+                                  width: 16,
+                                ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 75),
+                                child: Text(
+                                  "${widget.offerModel.to}",
+                                  style: const TextStyle(
+                                    color: Color(0XFF131313),
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            height: 25,
+                            width: 106,
+                            margin: const EdgeInsets.only(left: 68),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 24,
+                                    width: 106,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0XFF008955),
+                                      borderRadius: BorderRadius.circular(
+                                        8,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Book now",
+                                    style: TextStyle(
+                                      color: Color(0XFFFFFFFF),
+                                      fontSize: 16,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 3),
                     Padding(
@@ -164,13 +221,11 @@ class _CardOfferState extends State<CardOffer> {
                             child: Container(
                               width: 38,
                               height: 38,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    "https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2ZpbGUlMjBwaG90b3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                                  ),
+                                  image: NetworkImage("${_creator?.imagePath}"),
                                 ),
                               ),
                             ),
@@ -184,6 +239,7 @@ class _CardOfferState extends State<CardOffer> {
                             child: Text(
                               "${_creator?.username}",
                               style: const TextStyle(
+                                color: Color(0XFF008955),
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w500,
                               ),
@@ -192,9 +248,8 @@ class _CardOfferState extends State<CardOffer> {
                           const Spacer(),
                           const Padding(
                             padding: EdgeInsets.only(
-                              left: 26,
-                              top: 16,
-                              bottom: 8,
+                              left: 6,
+                              top: 6,
                             ),
                             child: Text(
                               "4,5",

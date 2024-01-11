@@ -8,6 +8,8 @@ class OfferModel {
   String? to;
   String? montant;
   String? photo;
+  String? carName;
+  String? vitesseMax;
 
   OfferModel(
       {this.id,
@@ -18,7 +20,9 @@ class OfferModel {
       this.from,
       this.to,
       this.montant,
-      this.photo});
+      this.photo,
+      this.carName,
+      this.vitesseMax});
 
   OfferModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +34,8 @@ class OfferModel {
     to = json['to'];
     montant = json['montant'];
     photo = json['photo'];
+    carName = json['carName'];
+    vitesseMax = json['vitesseMax'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +49,8 @@ class OfferModel {
     data['to'] = to;
     data['montant'] = montant;
     data['photo'] = photo;
+    data['carName'] = carName;
+    data['vitesseMax'] = vitesseMax;
     return data;
   }
 }
