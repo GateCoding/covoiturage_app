@@ -8,7 +8,7 @@ class UserModel {
   String? email;
   String? dateNaissance;
   String? uid;
-  File? imagePath;
+  String? imagePath;
 
   UserModel(
       {this.id,

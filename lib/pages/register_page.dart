@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _cinController = TextEditingController();
   FocusNode focusNode = FocusNode();
 
-  File? imageFile;
+  String? imageFile;
 
   void signUserUp() async {
     showDialog(
@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (imageFile != null) {
           Reference storageReference =
               FirebaseStorage.instance.ref().child('images/');
-          await storageReference.putFile(imageFile!);
+          await storageReference.putFile(imageFile! as File);
 
           // Get the image URL
           String imageURL = await storageReference.getDownloadURL();
@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       if (image != null) {
         setState(() {
-          imageFile = File(image.path);
+          imageFile = File(image.path) as String?;
           print("${imageFile}ddddddddddd22222222222");
         });
       }
@@ -154,62 +154,99 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void UploadImageft() {}
-  @override
-  Widget build(BuildContext context) {
+ 
+
+ // ... (Previous code remains unchanged)
+@override
+ Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: _pickImage,
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[300],
+              ),
+              child: const Icon(Icons.add_a_photo),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const Icon(
-                  Icons.lock,
-                  size: 50,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: _pickImage,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey[300],
+                            child: imageFile != null
+                                ? ClipOval(
+                                    child: Image.file(
+                                      imageFile! as File,
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(),
+                          ),
+                          const Icon(
+                            Icons.add,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 50),
-                Text(
-                  'Let\'s create an account for you!',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: _firstNameController,
+                    decoration: InputDecoration(
+                    labelText: 'Username',
+                    hintText: 'Username',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add_a_photo),
-                  // controller:_imagePath,
-                  onPressed: () {
-                    _pickImage();
-                    print("ddddddddddd");
-                  },
-                ),
-                // Display selected image if available
-                imageFile != null
-                    ? Image.file(
-                        imageFile!,
-                        height: 100,
-                        width: 100,
-                      )
-                    : Container(),
-                const SizedBox(height: 25),
-                MyTextField(
-                  controller: _firstNameController,
-                  hintText: 'username',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16.0),
                 IntlPhoneField(
                   controller: _numberPhoneController,
                   focusNode: focusNode,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Phone Number',
+                    hintText: 'Phone Number',
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  ),
-                  languageCode: "en",
+                  ),                  languageCode: "en",
                   onChanged: (phone) {
                     print(phone.completeNumber);
                   },
@@ -217,28 +254,59 @@ class _RegisterPageState extends State<RegisterPage> {
                     print('Country changed to: ${country.name}');
                   },
                 ),
-                MyTextField(
+                TextField(
                   controller: _emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
-                MyTextField(
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),                ),
+                const SizedBox(height: 16.0),
+                TextField(
                   controller: _passwordController,
-                  hintText: 'Password',
+                    decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: '',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
-                MyTextField(
+                TextField(
                   controller: _confirmPasswordController,
-                  hintText: 'Confirm Password',
+                  decoration: InputDecoration(
+                    labelText:  'Confirm Password',
+                    hintText: 'Confirm Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 25),
-                MyButton(
-                  text: 'Sign Up',
-                  onTap: signUserUp,
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: signUserUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -247,4 +315,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-}
+ }
