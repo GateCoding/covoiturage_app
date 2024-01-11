@@ -1,20 +1,24 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialog_helper/flutter_dialog_helper.dart';
 import 'package:covoiturage/components/my_button.dart';
 import 'package:covoiturage/components/my_textfield.dart';
 import 'package:covoiturage/components/square_tile.dart';
 import 'package:covoiturage/pages/toast_message.dart';
-// import 'package:covoiturage/service/auth_service.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class RegisterPage extends StatefulWidget {
-  final Function()? onTap;
-  const RegisterPage({super.key, required this.onTap});
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -23,10 +27,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _numberPhoneController = TextEditingController();
+  final TextEditingController _imagePath = TextEditingController();
   final TextEditingController _cinController = TextEditingController();
+  FocusNode focusNode = FocusNode();
 
-  // sign user up method
+  File? imageFile;
+
   void signUserUp() async {
     showDialog(
       context: context,
@@ -36,35 +43,50 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
-    // try sign in
+
     try {
       if (_passwordController.text == _confirmPasswordController.text) {
         final res = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
-        // String? uid = res.user?.uid;
-        // final userModel = UserModel(
-        //   email: _emailController.text,
-        //   prenom: _lastNameController.text,
-        //   nom: _firstNameController.text,
-        //   dateNaissance: "1990-01-01",
-        //   uid: uid,
-        // );
-        // Save user data to Firestore
-        // await addUserToFirestore(userModel);
+        String? uid = res.user?.uid;
+        final userModel = UserModel(
+          email: _emailController.text,
+          numberPhone: _numberPhoneController.text,
+          username: _firstNameController.text,
+          dateNaissance: "1990-01-01",
+          imagePath: imageFile,
+          uid: uid,
+        );
+
+        if (imageFile != null) {
+          Reference storageReference =
+              FirebaseStorage.instance.ref().child('images/');
+          await storageReference.putFile(imageFile!);
+
+          // Get the image URL
+          String imageURL = await storageReference.getDownloadURL();
+
+          // Update the Firestore document with the image URL
+          //await documentReference.update({'imageURL': imageURL});
+        }
+
+        print('Event added to Firebase');
+        // You can navigate to another screen or perform additional actions here
+
+        await addUserToFirestore(userModel);
+
         try {
-          ToastMsg.showToastMsg("Registed");
+          ToastMsg.showToastMsg("Registered");
           Navigator.pop(context);
-          // Get.offAllNamed('/HomePage');
         } catch (e) {
-          ToastMsg.showToastMsg("Smoothing went wrong");
+          ToastMsg.showToastMsg("Something went wrong");
         }
       } else {
-        showErrorMessage(context, "Passwords don'\tmatch!!!");
+        showErrorMessage(context, "Passwords don't match!!!");
       }
     } on FirebaseAuthException catch (e) {
-      // POP the circle
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
         wrongEmailMessage();
@@ -80,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return const AlertDialog(
           title: Center(
-            child: Text('INCORECT EMAIL'),
+            child: Text('INCORRECT EMAIL'),
           ),
         );
       },
@@ -93,11 +115,31 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return const AlertDialog(
           title: Center(
-            child: Text('INCORECT PASSWORD'),
+            child: Text('INCORRECT PASSWORD'),
           ),
         );
       },
     );
+  }
+
+  Future<void> _pickImage() async {
+    //controller:_imagePath;
+    try {
+      final ImagePicker imagePicker = ImagePicker();
+
+      final XFile? image =
+          await imagePicker.pickImage(source: ImageSource.gallery);
+      print("${imagePicker}ddddddddddd");
+
+      if (image != null) {
+        setState(() {
+          imageFile = File(image.path);
+          print("${imageFile}ddddddddddd22222222222");
+        });
+      }
+    } catch (e) {
+      print("Error selecting image: $e");
+    }
   }
 
   Future<void> addUserToFirestore(UserModel userModel) async {
@@ -111,6 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  void UploadImageft() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,16 +165,11 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-
-                // logo
                 const Icon(
                   Icons.lock,
                   size: 50,
                 ),
-
                 const SizedBox(height: 50),
-
-                // welcome back, you've been missed!
                 Text(
                   'Let\'s create an account for you!',
                   style: TextStyle(
@@ -139,127 +177,69 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontSize: 16,
                   ),
                 ),
-
+                IconButton(
+                  icon: const Icon(Icons.add_a_photo),
+                  // controller:_imagePath,
+                  onPressed: () {
+                    _pickImage();
+                    print("ddddddddddd");
+                  },
+                ),
+                // Display selected image if available
+                imageFile != null
+                    ? Image.file(
+                        imageFile!,
+                        height: 100,
+                        width: 100,
+                      )
+                    : Container(),
                 const SizedBox(height: 25),
                 MyTextField(
-                  controller: _lastNameController,
-                  hintText: 'Nom',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
-
-                MyTextField(
                   controller: _firstNameController,
-                  hintText: 'Prenom',
+                  hintText: 'username',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
-
-                // email textfield
+                IntlPhoneField(
+                  controller: _numberPhoneController,
+                  focusNode: focusNode,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                  languageCode: "en",
+                  onChanged: (phone) {
+                    print(phone.completeNumber);
+                  },
+                  onCountryChanged: (country) {
+                    print('Country changed to: ${country.name}');
+                  },
+                ),
                 MyTextField(
                   controller: _emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
-
                 const SizedBox(height: 10),
-
-                // password textfield
                 MyTextField(
                   controller: _passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-
                 const SizedBox(height: 10),
-
-                // confirm password textfield
                 MyTextField(
                   controller: _confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
-
                 const SizedBox(height: 10),
-
                 const SizedBox(height: 25),
-
-                // sign in button
                 MyButton(
                   text: 'Sign Up',
                   onTap: signUserUp,
                 ),
-
-                const SizedBox(height: 50),
-
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 50),
-
-                // google + apple sign in buttons
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
-                    SizedBox(width: 25),
-
-                    // apple button
-                    SquareTile(imagePath: 'lib/images/apple.png')
-                  ],
-                ),
-
-                const SizedBox(height: 30),
-
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Already Have An Acount?',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: const Text(
-                        'Login now',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                  ],
-                )
               ],
             ),
           ),
