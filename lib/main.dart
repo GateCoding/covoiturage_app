@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             );
             case NamedRoutes.driverPage:
             return MaterialPageRoute(
-              builder: (_) => const DriverProfilePage(),
+              builder: (context) => const DriverProfilePage(),
               settings: settings,
             );
           default:
