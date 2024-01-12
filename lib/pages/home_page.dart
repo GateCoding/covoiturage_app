@@ -65,10 +65,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, NamedRoutes.addScreen);
                 break;
               case 2:
-                // Handle navigation to the event screen
-                break;
-              case 3:
-                // Handle navigation to the profile screen
+                Navigator.pushNamed(context, NamedRoutes.profileScreen);
                 break;
             }
           },

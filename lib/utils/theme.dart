@@ -1,4 +1,4 @@
-import 'package:covoiturage/components/colors.dart';
+import 'package:covoiturage/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

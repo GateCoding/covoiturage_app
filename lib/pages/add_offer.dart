@@ -23,7 +23,7 @@ class AddOfferPage extends StatefulWidget {
 class _AddOfferPageState extends State<AddOfferPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-  OfferModel? offer; // Create an instance of EventModel
+  OfferModel? offer;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();

@@ -1,3 +1,4 @@
+import 'package:covoiturage/pages/driver_profile.dart';
 import 'package:covoiturage/utils/theme.dart';
 import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:covoiturage/pages/add_offer.dart';
@@ -51,6 +52,11 @@ class MyApp extends StatelessWidget {
           case NamedRoutes.createAccount:
             return MaterialPageRoute(
               builder: (context) => const RegisterPage(),
+              settings: settings,
+            );
+          case NamedRoutes.profileScreen:
+            return MaterialPageRoute(
+              builder: (context) => const DriverProfilePage(),
               settings: settings,
             );
           default:
