@@ -1,4 +1,4 @@
-import 'package:covoiturage/components/colors.dart';
+import 'package:covoiturage/utils/colors.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/model/user_model.dart';
 import 'package:covoiturage/service/user_service.dart';
@@ -221,7 +221,7 @@ class _CardOfferState extends State<CardOffer> {
                             child: Container(
                               width: 38,
                               height: 38,
-                              decoration:  BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -252,7 +252,7 @@ class _CardOfferState extends State<CardOffer> {
                               top: 6,
                             ),
                             child: Text(
-                              "4,5",
+                              "★4,5",
                               style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,

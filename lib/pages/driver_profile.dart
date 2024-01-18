@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({super.key});
+class DriverProfilePage extends StatefulWidget {
+  const DriverProfilePage({Key? key}) : super(key: key);
+
+  @override
+  _DriverProfilePageState createState() => _DriverProfilePageState();
+}
+
+class _DriverProfilePageState extends State<DriverProfilePage> {
+
+  
+
+  double rating = 4.9;
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +49,7 @@ class DriverProfilePage extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               RatingBar.builder(
-                initialRating: 4.9, // Replace with your actual rating
+                initialRating: rating,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -48,8 +59,10 @@ class DriverProfilePage extends StatelessWidget {
                   Icons.star,
                   color: Colors.amber,
                 ),
-                onRatingUpdate: (rating) {
-                  // Handle rating update
+                onRatingUpdate: (newRating) {
+                  setState(() {
+                    rating = newRating;
+                  });
                 },
               ),
             ],
@@ -63,7 +76,7 @@ class DriverProfilePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextFormField(
-              // Your text box for description
+              controller: descriptionController,
               maxLines: 3,
               decoration: const InputDecoration(
                 hintText: 'Enter your description here...',

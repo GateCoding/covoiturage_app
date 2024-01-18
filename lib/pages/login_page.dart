@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:covoiturage/components/my_button.dart';
-import 'package:covoiturage/components/my_textfield.dart';
 
 class LoginPage extends StatefulWidget {
-  //final Function()? onTap;
   const LoginPage({
     super.key,
   });
@@ -35,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
+      Navigator.pushNamed(context, "/home-screen");
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == 'user-not-found') {
@@ -78,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
       home: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-         leading: IconButton(
+          leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               // Handle the back button press

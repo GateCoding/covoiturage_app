@@ -23,7 +23,7 @@ class AddOfferPage extends StatefulWidget {
 class _AddOfferPageState extends State<AddOfferPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-  OfferModel? offer; // Create an instance of EventModel
+  OfferModel? offer;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();
@@ -131,7 +131,14 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
                 ElevatedButton(
                   onPressed: _pickImage,
-                  child: const Text('Car Image'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0XFF08B783),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text('Car Image',
+                      style: TextStyle(color: Colors.white)),
                 ),
 
                 // Display selected image
