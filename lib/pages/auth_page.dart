@@ -1,5 +1,4 @@
 import 'package:covoiturage/pages/home_page.dart';
-import 'package:covoiturage/pages/login_page.dart';
 import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -56,13 +56,13 @@ class _RegisterPageState extends State<RegisterPage> {
           uid: uid,
         );
 
-        ToastMsg.showToastMsg('Event added successfully');
+        ToastMsg.showToastMsg('Offer added successfully');
 
         await addUserToFirestore(userModel);
 
         try {
           ToastMsg.showToastMsg("Registered");
-          Navigator.pop(context);
+          Navigator.pushNamed(context, "/home-screen");
         } catch (e) {
           ToastMsg.showToastMsg("Something went wrong");
         }

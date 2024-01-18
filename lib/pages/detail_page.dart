@@ -253,13 +253,13 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          "From ${offerModel.from!}",
+                          offerModel.from!,
                           style: const TextStyle(
                               fontSize: 18, color: Color(0xFF9698A9)),
                         ),
-                        const SizedBox(width: 10),
+                        // const SizedBox(width: 10),
                         Text(
-                          " To ${offerModel.to!}",
+                          " ==> ${offerModel.to!}",
                           style: const TextStyle(
                               fontSize: 18, color: Color(0xFF9698A9)),
                         )

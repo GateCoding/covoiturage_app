@@ -41,12 +41,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  final CollectionReference eventsCollection =
-      FirebaseFirestore.instance.collection('events');
+  final CollectionReference offerCollection =
+      FirebaseFirestore.instance.collection('offers');
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    // log ("hhhhhhhhhhhhh");
     return Scaffold(
       appBar:
           const PreferredSize(preferredSize: Size(0, 0), child: CustomAppBar()),

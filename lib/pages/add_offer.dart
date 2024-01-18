@@ -131,7 +131,14 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
                 ElevatedButton(
                   onPressed: _pickImage,
-                  child: const Text('Car Image'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0XFF08B783),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text('Car Image',
+                      style: TextStyle(color: Colors.white)),
                 ),
 
                 // Display selected image

@@ -1,12 +1,13 @@
-// ignore_for_file: prefer_const_constructors
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
-
   @override
   Widget build(BuildContext context) {
+    log("ffffffffffffffffffff");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome'),
@@ -23,7 +24,7 @@ class WelcomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             const Text(
-              'Welcome to the App!',
+              'Welcome to the Covoiturage App!',
               style: TextStyle(fontSize: 24.0),
               textAlign: TextAlign.center,
             ),
