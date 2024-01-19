@@ -6,4 +6,6 @@ class NamedRoutes {
   static const logIn = '/login';
   static const addScreen = '/offer-form';
   static const profileScreen = '/profile';
+  static const driverScreen = '/driver';
+  static const myOffersScreen = '/my-offers';
 }

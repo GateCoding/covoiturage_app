@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/components/circle_button.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
 import 'package:covoiturage/components/toast_message.dart';
+import 'package:covoiturage/model/location_model.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/pages/welcom_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +36,27 @@ class _AddOfferPageState extends State<AddOfferPage> {
   final TextEditingController carController = TextEditingController();
   final TextEditingController speedController = TextEditingController();
   File? _image;
+
+  late List<Location> locations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocations();
+  }
+
+  Future<void> _loadLocations() async {
+    try {
+      String data = await rootBundle.loadString('assets/json/cities.json');
+      List<dynamic> jsonList = json.decode(data);
+      locations = jsonList.map((json) => Location.fromJson(json)).toList();
+      if (locations.length < 2) {
+        log("message");
+      }
+    } catch (error) {
+      print('Error loading locations: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +113,54 @@ class _AddOfferPageState extends State<AddOfferPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                TextField(
-                  controller: fromController,
+                // TextField(
+                //   controller: fromController,
+                //   decoration: const InputDecoration(labelText: 'From'),
+                // ),
+
+                DropdownButtonFormField<String>(
+                  value: fromController.text.isNotEmpty
+                      ? fromController.text
+                      : null,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      fromController.text = newValue!;
+                    });
+                  },
+                  items: locations
+                      .map<DropdownMenuItem<String>>((Location location) {
+                    return DropdownMenuItem<String>(
+                      value: location.city,
+                      child: Text(location.city),
+                    );
+                  }).toList(),
                   decoration: const InputDecoration(labelText: 'From'),
                 ),
+
                 const SizedBox(height: 16.0),
-                TextField(
-                  controller: toController,
-                  decoration: const InputDecoration(labelText: 'to'),
+                // TextField(
+                //   controller: toController,
+                //   decoration: const InputDecoration(labelText: 'to'),
+                // ),
+
+                DropdownButtonFormField<String>(
+                  value:
+                      toController.text.isNotEmpty ? toController.text : null,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      toController.text = newValue!;
+                    });
+                  },
+                  items: locations
+                      .map<DropdownMenuItem<String>>((Location location) {
+                    return DropdownMenuItem<String>(
+                      value: location.city,
+                      child: Text(location.city),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(labelText: 'To'),
                 ),
+
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: carController,
@@ -128,7 +191,6 @@ class _AddOfferPageState extends State<AddOfferPage> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16.0),
-
                 ElevatedButton(
                   onPressed: _pickImage,
                   style: ElevatedButton.styleFrom(
@@ -140,13 +202,11 @@ class _AddOfferPageState extends State<AddOfferPage> {
                   child: const Text('Car Image',
                       style: TextStyle(color: Colors.white)),
                 ),
-
                 if (_image != null)
                   Image.file(
                     _image!,
                     height: 100,
                   ),
-
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
@@ -226,7 +286,8 @@ class _AddOfferPageState extends State<AddOfferPage> {
 
       String photoUrl = await _uploadImage(image);
 
-      await FirebaseFirestore.instance.collection('offers').add({
+      DocumentReference offerRef =
+          await FirebaseFirestore.instance.collection('offers').add({
         'title': titre,
         'idCreateur': userId,
         'from': from,
@@ -238,6 +299,9 @@ class _AddOfferPageState extends State<AddOfferPage> {
         'vitesseMax': speed,
         'description': description
       });
+
+      String offerId = offerRef.id;
+      await offerRef.update({'id': offerId});
 
       ToastMsg.showToastMsg('Offer added successfully');
       Navigator.pop(context);

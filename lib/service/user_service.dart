@@ -16,4 +16,12 @@ class UserService {
       return null;
     }
   }
+
+  Future<void> updateUserByUid(String uid, UserModel userModel) async {
+    try {
+      await usersCollection.doc(uid).update(userModel.toJson());
+    } catch (error) {
+      print('Error updating user by UID: $error');
+    }
+  }
 }
