@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covoiturage/bloc/offer_cubit.dart';
 import 'package:covoiturage/components/card_offer.dart';
 import 'package:covoiturage/components/custom_app_bar.dart';
@@ -41,8 +40,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  final CollectionReference offerCollection =
-      FirebaseFirestore.instance.collection('offers');
+  // final CollectionReference offerCollection =
+  //     FirebaseFirestore.instance.collection('offers');
 
   @override
   Widget build(BuildContext context) {

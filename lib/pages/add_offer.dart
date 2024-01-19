@@ -141,7 +141,6 @@ class _AddOfferPageState extends State<AddOfferPage> {
                       style: TextStyle(color: Colors.white)),
                 ),
 
-                // Display selected image
                 if (_image != null)
                   Image.file(
                     _image!,
