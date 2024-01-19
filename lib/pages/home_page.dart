@@ -27,14 +27,13 @@ class _HomePageState extends State<HomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
   List<OfferModel> filteredOffers = [];
 
-
   @override
   void initState() {
     super.initState();
     getDataUser();
   }
 
-void _searchOffers(String fromCity, String toCity) {
+  void _searchOffers(String fromCity, String toCity) {
     print("Searching offers for: $fromCity to $toCity");
 
     OfferService offerService = OfferService();
@@ -54,8 +53,6 @@ void _searchOffers(String fromCity, String toCity) {
     );
   }
 
-
-
   void getDataUser() async {
     User? user = auth.currentUser;
     if (user != null) {
@@ -68,8 +65,7 @@ void _searchOffers(String fromCity, String toCity) {
     }
   }
 
-
-TextEditingController fromCityController = TextEditingController();
+  TextEditingController fromCityController = TextEditingController();
   TextEditingController toCityController = TextEditingController();
 
   final CollectionReference offerCollection =
@@ -78,7 +74,6 @@ TextEditingController fromCityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    // log ("hhhhhhhhhhhhh");
     return Scaffold(
       appBar:
           const PreferredSize(preferredSize: Size(0, 0), child: CustomAppBar()),
@@ -97,38 +92,41 @@ TextEditingController fromCityController = TextEditingController();
                 Navigator.pushNamed(context, NamedRoutes.addScreen);
                 break;
               case 2:
+                Navigator.pushNamed(context, NamedRoutes.myOffersScreen);
+                break;
+              case 3:
                 Navigator.pushNamed(context, NamedRoutes.profileScreen);
                 break;
             }
           },
         ),
       ),
-        body: SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 24),
-        child: BlocProvider(
-          create: (_) => OfferCubit()..listenToOffers(),
-          child: Column(
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Offers This Month",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 24),
+          child: BlocProvider(
+            create: (_) => OfferCubit()..listenToOffers(),
+            child: Column(
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 24),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Offers This Month",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            BlocBuilder<OfferCubit, OfferState>(
+                const SizedBox(height: 20),
+                BlocBuilder<OfferCubit, OfferState>(
                   builder: (context, state) {
                     if (state is OfferError) {
                       return Center(child: Text(state.message));
@@ -141,15 +139,15 @@ TextEditingController fromCityController = TextEditingController();
                     }
                   },
                 ),
-
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
-_buildHeader() => Padding(
+
+  _buildHeader() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +190,6 @@ _buildHeader() => Padding(
                     String toCity = toCityController.text;
                     // Call a method to filter offers based on cities
                     _searchOffers(fromCity, toCity);
-                    
                   },
                   child: const Text("Search"),
                 ),
@@ -201,8 +198,6 @@ _buildHeader() => Padding(
           ],
         ),
       );
-
-
 
   _listOffer(List<OfferModel> offers) => Container(
         height: 600,
@@ -213,6 +208,4 @@ _buildHeader() => Padding(
           itemBuilder: (context, index) => CardOffer(offerModel: offers[index]),
         ),
       );
-
-
 }

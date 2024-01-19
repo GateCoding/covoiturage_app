@@ -39,6 +39,10 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
           label: "Add Offer",
         ),
         NavigationDestination(
+          icon: Image.asset("assets/images/add.png", width: 24, height: 24),
+          label: "Add Offer",
+        ),  
+        NavigationDestination(
             icon: Image.asset("assets/images/ic_profile.png",
                 width: 24, height: 24),
             label: "Profile"),

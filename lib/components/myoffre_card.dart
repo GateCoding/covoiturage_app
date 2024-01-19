@@ -28,7 +28,7 @@ class OfferCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    offer.titre ?? 'No Title',
+                    "Offer ID : ${offer.id}" ?? 'No Title',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

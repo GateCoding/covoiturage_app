@@ -1,11 +1,10 @@
 import 'package:covoiturage/bloc/offer_bloc.dart';
-import 'package:covoiturage/components/widget/myoffre_card.dart';
+import 'package:covoiturage/components/myoffre_card.dart';
 import 'package:flutter/material.dart';
 import 'package:covoiturage/model/offer_model.dart';
 import 'package:covoiturage/service/offer_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
 class MyOffers extends StatefulWidget {
   const MyOffers({Key? key}) : super(key: key);
@@ -120,16 +119,16 @@ class _MyOffersState extends State<MyOffers> {
     );
 
     _offerBloc.stream.listen((event) {
-      if (event == "edit") {
+      if (event == "Edit") {
         _editOffer(offerId);
-      } else if (event == "delete") {
+      } else if (event == "Delete") {
         _deleteOffer(offerId);
       }
     });
   }
 
   //function
-void _editOffer(String offerId) async {
+  void _editOffer(String offerId) async {
     OfferModel? offer = await offerService.getOfferById(offerId);
 
     if (offer != null) {
@@ -145,8 +144,6 @@ void _editOffer(String offerId) async {
     await offerService.deleteOffer(offerId);
   }
 
-
-
   // Dispose the bloc when the widget is disposed
   @override
   void dispose() {
@@ -154,9 +151,6 @@ void _editOffer(String offerId) async {
     super.dispose();
   }
 }
-
-
-
 
 class OfferEditDialog extends StatelessWidget {
   final String offerId;
