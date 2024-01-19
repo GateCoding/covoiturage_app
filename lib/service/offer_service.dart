@@ -36,5 +36,30 @@ class  OfferService {
     return query.snapshots();
   }
 
+Future<OfferModel?> getOfferById(String offerId) async {
+    final DocumentSnapshot doc = await offersCollection.doc(offerId).get();
+
+    if (doc.exists) {
+      return OfferModel.fromJson(doc.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
+
+
+  Future<List<OfferModel>> getOffersByUserId(String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await offersCollection.where('idCreateur', isEqualTo: userId).get();
+      List<OfferModel> offers = querySnapshot.docs
+          .map((doc) => OfferModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      return offers;
+    } catch (e) {
+      print("Error fetching user offers: $e");
+      return [];
+    }
+  }
+
 
 }
